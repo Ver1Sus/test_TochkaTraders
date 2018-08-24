@@ -56,6 +56,21 @@ class Base():
 		
 		return self.con.commit()
 		
+	def getMainUrls(self):
+		with self.connect() as con:
+			with self.con.cursor() as cur:
+				cur.execute("SELECT DISTINCT trader_name FROM tochka_history;")
+				res = cur.fetchall()
+		
+		return res
+		
+	def getTrader(self, trader_name):
+		with self.connect() as con:
+			with self.con.cursor() as cur:
+				cur.execute("SELECT  trade_date, open, high, low, close_last, vol FROM tochka_history WHERE trader_name='{}'".format(trader_name))
+				res = cur.fetchall()
+		
+		return res
 		
 		
 		

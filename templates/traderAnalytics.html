@@ -1,0 +1,37 @@
+{% extends "skelet.html" %}
+
+
+
+{% block content %}
+
+	{{trader_name}}
+	</br>
+	{{ result.trader_name }}
+	
+	<a href="/{{trader_name}}">Trade of {{ trader_name }}</a>
+	</br>
+	<a href="/{{trader_name}}/insider">Insider of {{ trader_name }}</a>
+	
+	{% if result %}
+		<table border=3>
+			<tr>
+				<th>open</th>
+				<th>high</th>
+				<th>low</th>
+				<th>close_last</th>
+				<th>vol</th>
+			</tr>
+			{% for el in result %}
+				<tr>
+					<td>{{el.open}}</td>
+					<td>{{el.high}}</td>
+					<td>{{el.low}}</td>
+					<td>{{el.close_last}}</td>
+					<td>{{el.vol}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% endif %}
+	
+{% endblock %}
+

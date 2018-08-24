@@ -99,11 +99,12 @@ class PycoderSpider(scrapy.Spider):
 		# dbPostgre.insertHistory_td( traderName, trNew[0])
 		print("*"*8)
 		
-		page = response.url.split("/")[-2]
-		filename = 'quotes-%s.html' % page
-		with open(filename, 'wb') as f:
-			f.write(response.body)
-		self.log('Saved file %s' % filename)
+		##--- save the page in file
+		# page = response.url.split("/")[-2]
+		# filename = 'quotes-%s.html' % page
+		# with open(filename, 'wb') as f:
+			# f.write(response.body)
+		# self.log('Saved file %s' % filename)
 		
 		
 		
