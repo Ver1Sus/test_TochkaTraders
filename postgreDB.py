@@ -56,6 +56,22 @@ class Base():
 		
 		return self.con.commit()
 		
+		
+	def insertInsider_td(self, traderName, tdList):
+		with self.connect() as con:
+			with self.con.cursor() as cur:
+				# cur.execute("UPDATE tochka_insider SET "\
+					# " trade_date='{0}', trader_name='{1}', open={2}, high={3}, low={4}, close_last={5}, vol={6}"\
+					# " WHERE trade_date='{0}' and trader_name='{1}';".format(tdList[0], traderName, tdList[1], tdList[2], tdList[3], tdList[4], tdList[5]))
+				cur.execute("INSERT INTO tochka_insider(trader_name, insider_name, relation, last_date, transaction_type, owner_type, shares_traded, price, shares_held) " \
+					" SELECT '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', {6}, {7}, {8} "\
+					" WHERE NOT EXISTS "\
+						"(SELECT 1 FROM tochka_insider WHERE trader_name='{0}' and insider_name='{1}' and relation='{2}' and last_date='{3}' and transaction_type='{4}' and owner_type='{5}' and shares_traded={6} and price={7} and shares_held={8})"\
+					.format( traderName, tdList[0], tdList[1], tdList[2], tdList[3], tdList[4], tdList[5], tdList[6], tdList[7]))
+		
+		return self.con.commit()
+		
+		
 	def getMainUrls(self):
 		with self.connect() as con:
 			with self.con.cursor() as cur:

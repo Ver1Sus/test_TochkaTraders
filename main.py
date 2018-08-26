@@ -63,6 +63,32 @@ def trader(trader_name):
 	# print(resJson)
 	return render_template("./trader.html", title='Trader {}'.format(trader_name), trader_name=trader_name, resJson=result, description='Trader')
 
+
+###--- Task 4
+@app.route("/<string:trader_name>/insider")
+def insider(trader_name):
+	
+	connection = engine.connect()
+	
+	
+	##--- get the history of trader_name, on last 3 month
+	result = connection.execute("select * from tochka_insider "\
+		" where trader_name='{}'  "\
+		" order by id desc".format(trader_name))
+	connection.close()
+	
+	# for row in result:
+		# row['trade_date'] = row['trade_date'].strftime('%Y-%m-%d')
+		# print("trade_date:", type(row['trade_date']))
+		
+	# res2 = deepcopy(result)
+	# resultJson = updateHistoryToJson(res2)
+	print(result)
+	# print(resJson)
+	return render_template("./insider.html", title='Trader {}'.format(trader_name), trader_name=trader_name, resJson=result, description='Trader')
+
+	
+	
 	
 ##---- Task 6
 @app.route("/<string:trader_name>/analytics", methods=['GET'])

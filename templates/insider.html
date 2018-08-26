@@ -1,0 +1,36 @@
+{% extends "skelet.html" %}
+
+
+
+{% block content %}
+
+	{{trader_name}}
+	</br>
+	{{ resJson.trader_name }}
+	<a href="/{{trader_name}}">Back to trader</a>
+	<table border=3>
+		<tr>
+				<th> Insider </th>
+				<th> Relation </th>
+				<th> Last Date </th>
+				<th> Transaction Type </th>
+				<th> OwnerType </th>
+				<th> Shares Traded </th>
+				<th> Last Price </th>
+				<th> Shares Held </th>
+		</tr>
+		{% for el in resJson %}
+			<tr>
+				<td>{{el.insider_name}}</td>
+				<td>{{el.relation}}</td>
+				<td>{{el.last_date}}</td>
+				<td>{{el.transaction_type}}</td>
+				<td>{{el.owner_type}}</td>
+				<td>{{el.shares_traded}}</td>
+				<td>{{el.price}}</td>
+				<td>{{el.shares_held}}</td>
+			</tr>
+		{% endfor %}
+	</table>
+{% endblock %}
+
