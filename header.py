@@ -21,3 +21,17 @@ def updateHistoryToJson(res):
 			'close_last':el[4],
 			'vol':el[5]})
 	return json.dumps(resJson)
+	
+def createApi(headers, res):
+	resJson = {'root':[]}
+	for el in res:
+		innerElement = {}
+		for i, columnName in enumerate(headers):
+			##--- if get date - convert to string format
+			if isinstance(el[i], datetime.date):
+				innerElement[columnName] = el[i].strftime('%Y-%m-%d')
+			else:
+				innerElement[columnName] = el[i]
+		resJson['root'].append(innerElement)
+		
+	return json.dumps(resJson)

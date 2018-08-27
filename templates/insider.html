@@ -4,10 +4,11 @@
 
 {% block content %}
 
-	{{trader_name}}
-	</br>
-	{{ resJson.trader_name }}
 	<a href="/{{trader_name}}">Back to trader</a>
+	{% if insiderName %}
+		</br>
+		<a href="/{{trader_name}}/insider">Back to insider</a>
+	{% endif %}
 	<table border=3>
 		<tr>
 				<th> Insider </th>
@@ -21,7 +22,7 @@
 		</tr>
 		{% for el in resJson %}
 			<tr>
-				<td>{{el.insider_name}}</td>
+				<td><a href="/{{trader_name}}/insider/{{el.insider_name}}">{{el.insider_name}}</a></td>
 				<td>{{el.relation}}</td>
 				<td>{{el.last_date}}</td>
 				<td>{{el.transaction_type}}</td>
