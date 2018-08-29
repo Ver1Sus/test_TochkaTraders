@@ -1,0 +1,29 @@
+{% extends "skelet.html" %}
+
+
+
+{% block content %}
+
+	<a href="/{{trader_name}}">Back to trader</a>
+	{% if insiderName %}
+		</br>
+		<a href="/{{trader_name}}/insider">Back to insider</a>
+	{% endif %}
+	<table border=3>
+		<tr>
+				<th> Date From </th>
+				<th> {{typeVal}} from </th>
+				<th> Date To </th>
+				<th> {{typeVal}} To </th>
+		</tr>
+		{% for el in resJson %}
+			<tr>
+				<td>{{el.date_t1}}</td>
+				<td>{{el.value_t1}}</td>
+				<td>{{el.date_t2}}</td>
+				<td>{{el.value_t2}}</td>
+			</tr>
+		{% endfor %}
+	</table>
+{% endblock %}
+

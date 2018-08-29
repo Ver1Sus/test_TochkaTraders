@@ -214,6 +214,75 @@ def traderAnalytics(trader_name):
 	return render_template("./traderAnalytics.html", title='Trader {}'.format(trader_name), trader_name=trader_name, result=result, description='Trader Analytics. Between {} and {}'.format(date_from, date_to), apiUrl=request.full_path)
 	
 	
+###-- Task 7.API
+@app.route("/api/<string:trader_name>/delta", methods=['GET'])
+def deltaApi(trader_name):
+	
+	value = request.args.get('value')
+	typeVal = request.args.get('type')
+	
+	
+	if value and type:
+		try:
+			int(value)
+		except:
+			return "VALUE must be Integer." 
+		
+		if not(typeVal in ('open', 'high', 'low', 'close') ):
+			return "TYPE must be open/high/low/close"
+	else:
+		return "Add VALUE and TYPE"
+		
+	
+	if typeVal == 'close':
+		typeVal = 'close_last'
+	
+	connection = engine.connect()
+	
+	result = connection.execute("select t1.trade_date as date_t1,  t1.{0} as value_t1, t2.trade_date as date_t2, t2.{0} as value_t2 "\
+		" from tochka_history as t1 "\
+		"left join tochka_history as t2 on t2.trader_name = '{1}' "\
+		" where t1.trader_name='{1}' and t1.{0}-t2.{0} >= {2}".format(typeVal, trader_name, value))
+	connection.close()
+	
+	resJson = createApi( ['Date_from', '{}_from'.format(typeVal), 'Date_to', '{}_from'.format(typeVal)], result)	
+	return(resJson)
+		
+	
+	
+###-- Task 7
+@app.route("/<string:trader_name>/delta", methods=['GET'])
+def delta(trader_name):
+	
+	value = request.args.get('value')
+	typeVal = request.args.get('type')
+	
+	
+	if value and type:
+		try:
+			int(value)
+		except:
+			return "VALUE must be Integer." 
+		
+		if not(typeVal in ('open', 'high', 'low', 'close') ):
+			return "TYPE must be open/high/low/close"
+	else:
+		return "Add VALUE and TYPE"
+		
+	
+	if typeVal == 'close':
+		typeVal = 'close_last'
+	
+	connection = engine.connect()
+	
+	result = connection.execute("select t1.trade_date as date_t1,  t1.{0} as value_t1, t2.trade_date as date_t2, t2.{0} as value_t2 "\
+		" from tochka_history as t1 "\
+		"left join tochka_history as t2 on t2.trader_name = '{1}' "\
+		" where t1.trader_name='{1}' and t1.{0}-t2.{0} >= {2}".format(typeVal, trader_name, value))
+	connection.close()
+	
+	return render_template("./delta.html", title='Trader {}'.format(trader_name), trader_name=trader_name,  resJson=result, description='Trader {}'.format(trader_name), apiUrl=request.full_path, typeVal=typeVal)
+
 	
 	
 	
