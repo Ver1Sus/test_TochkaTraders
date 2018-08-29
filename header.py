@@ -13,7 +13,6 @@ def updateHistoryToJson(res):
 	resJson = {'history':[]}
 	for el in res:
 		resJson['history'].append({
-			# 'trade_date':el[0].strftime('%Y-%m-%d'),
 			'trade_date':el[0],
 			'open':el[1],
 			'high':el[2],

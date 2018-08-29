@@ -20,7 +20,7 @@ import postgreDB
 		
 def convertDate(dateStr):
 	'''
-		return now time if get time, not last date, or if the get error when try convert
+		return now time if get time is not last date, or if the get error when try convert
 	'''
 	if ':' in dateStr:
 		return datetime.datetime.now().strftime('%Y-%m-%d')
@@ -89,18 +89,11 @@ class PycoderSpider(scrapy.Spider):
 	##--- open file tickers.txt with list of traders, and get list with urls
 	fileName = '../../../tickers.txt'
 	
-	# start_urls = [ 'https://www.nasdaq.com/symbol/cvx/historical', 
-				# 'https://www.nasdaq.com/symbol/aapl/historical', 
-		# ]
 	start_urls = []
 		
 	with open(fileName, "r") as f:
-		# start_urls = ['https://www.nasdaq.com/symbol/{}/historical'.format(traderName.replace('\n','')) for traderName in f]
-		# for i in range(10):
-			# start_urls += ['https://www.nasdaq.com/symbol/{}/insider-trades?page={}'.format(traderName.replace('\n',''), i) for traderName in f]
-		
 		for line in f:
-			# start_urls += ['https://www.nasdaq.com/symbol/{}/historical'.format(line.replace('\n',''))]
+			start_urls += ['https://www.nasdaq.com/symbol/{}/historical'.format(line.replace('\n',''))]
 			for i in range(10):
 				start_urls += ['https://www.nasdaq.com/symbol/{}/insider-trades?page={}'.format(line.replace('\n','').lower(), i+1)]		
 		
@@ -110,23 +103,15 @@ class PycoderSpider(scrapy.Spider):
 	
 
 	def parse(self, response):
-        # for post_link in response.xpath(
-                # '//div[@class="post mb-2"]/h2/a/@href').extract():
-            # url = urljoin(response.url, post_link)
-            # print(url)
+	
 			
 		dbPostgre = postgreDB.Base()	
-		
-		# for quote in response.css('div.genTable'):
-			# yield {
-				# 'text': quote.css('span.text::text').extract_first(),
-				# 'author': quote.css('small.author::text').extract_first(),
-				# 'tags': quote.css('div.tags a.tag::text').extract(),
-			# }
-		
+				
 		traderName = re.findall(r'symbol/(\w+)',response.request.url)[0]
 		
 		div = response.css('div.genTable')
+		
+		##-- parse all history of traders
 		if (re.findall(r'symbol/\w+/(\w+)',response.request.url)[0]) == 'historical':
 		
 			trList = div.xpath("div/table/tbody/tr")
@@ -138,15 +123,14 @@ class PycoderSpider(scrapy.Spider):
 			
 			print("*"*8)
 			print(trNew[0])
-			traderName = re.findall(r'symbol/(\w+)',response.request.url)[0]
 			
 			#----- push in DB all values
 			[dbPostgre.insertHistory_td( traderName, td) for td in trNew]
-			# dbPostgre.insertHistory_td( traderName, trNew[0])
 			print("*"*8)
+			
+		##--- parse all insider of traders
 		elif (re.findall(r'symbol/\w+/(\w+)',response.request.url)[0]) == 'insider':
 			
-			# trList = div.xpath("table/tbody/tr")#.extract()
 			trList = div.xpath("table/tr")
 			trList = [x.xpath("td").extract() for x in trList]
 			
@@ -157,15 +141,8 @@ class PycoderSpider(scrapy.Spider):
 			print(response.request.url, trNew[0])
 			#----- push in DB all values
 			[dbPostgre.insertInsider_td( traderName, td) for td in trNew]
-			# dbPostgre.insertInsider_td( traderName, trNew[0])
 			print("*"*8)
 		
-		##--- save the page in file
-		# page = response.url.split("/")[-2]
-		# filename = 'quotes-%s.html' % page
-		# with open(filename, 'wb') as f:
-			# f.write(response.body)
-		# self.log('Saved file %s' % filename)
 		
 		
 		

@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, request
-# from view import IndexView
 from postgreDB import Base
 from header	import updateHistoryToJson, createApi
 from sqlalchemy import create_engine
 import datetime
 from dateutil.relativedelta import relativedelta
-# from copy import deepcopy
-# from app import create_app
 
-# app = create_app()
-# IndexView.register(app)
 app = Flask(__name__)
 base = Base()
 
 #--- connect to Base, using the SQLAlchemy
 engine = create_engine('postgresql+psycopg2://tocka_user:test1234@localhost/tochka_flask')
-# connection = engine.connect()
+
 
 ##---- Task 2
 @app.route("/")
@@ -283,13 +278,6 @@ def delta(trader_name):
 	
 	return render_template("./delta.html", title='Trader {}'.format(trader_name), trader_name=trader_name,  resJson=result, description='Trader {}'.format(trader_name), apiUrl=request.full_path, typeVal=typeVal)
 
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
